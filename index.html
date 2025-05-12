@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Beach Trip Planner</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Leaflet, Bootstrap, W3 -->
+
+    <link
+      href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      rel="stylesheet"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""
+    />
+
+    <script
+      src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+      integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+      crossorigin="">
+    </script>
+
+    <script src="https://unpkg.com/leaflet-providers@latest/leaflet-providers.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <link href="https://www.w3schools.com/w3css/5/w3.css" rel="stylesheet" >
+
+    <!-- Leaflet Layers -->
+
+    <link href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" rel="stylesheet"/>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <link href="/LEAFLET/leaflet-openweathermap.css" rel="stylesheet"/>
+    <script src="/LEAFLET/leaflet-openweathermap.js"></script>
+
+    <link href="/LEAFLET/Leaflet.Weather.css" rel="stylesheet"/>
+    <script src="/LEAFLET/Leaflet.Weather.js"></script>
+
+    <link href="/LEAFLET/L.Control.Window.css" rel="stylesheet">
+    <script src="/LEAFLET/L.Control.Window.js"></script>
+
+    <!-- Favicon -->
+
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/tempehbacon/final/0d4175939bf6d990884b8cd4d74b08eb787a9c51/GRAPHICS/BeachBall.svg">
+
+    <style>
+
+      html,
+
+      /* Page Layout */
+
+      body {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        background-attachment: fixed;
+        background-size: 100% auto;
+      }
+
+      .blended_grid {
+        width: 100%;
+        height: 100%;
+        display: block;
+        overflow: auto;
+      }
+
+      .main_wm {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Typography */
+
+      * {
+      font-family: "Muli", sans-serif;
+      font-size: 12px;
+      line-height: 18px;
+      font-weight: 400;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "Space Mono", monospace;
+        font-size: 20px;
+        font-weight: 900;
+        text-align: left;
+        color: #FFFFFF;
+      }
+
+      h2 {
+        margin: 0;
+        font-family: "Space Mono", monospace;
+        font-size: 15px;
+        font-weight: 400;
+        text-align: right;
+      }
+
+      h3 {
+        margin: 2px;
+        font-family: "Space Mono", monospace;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: left;
+        color: #0B6FC2;
+      }
+
+      h4 {
+        margin: 2px 2px 8px;
+        font-family: "Space Mono", monospace;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: left;
+        color: black;
+      }
+
+      /* Text Boxes */
+
+      .button {
+        width: 100%;
+        margin: 2px;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: left;
+        background: white;
+        color: #0B6FC2;
+        border: 2px solid #dee6f2;
+        border-radius: 5px;
+      }
+
+      .button:hover {
+        background: #0B6FC2;
+        color: white;
+        border: 2px solid #0B6FC2;
+      }
+
+      .aboutBox {
+        width: 100%;
+        margin: 2px;
+        padding: 10px 10px;
+        background: #0B6FC2;
+        color: white;
+        border-radius: 5px;
+      }
+
+      .footnotes {
+        width: 100%;
+        margin: 2px;
+        padding: 10px 10px;
+        background: #dee6f2;
+        color: #0B6FC2;
+        border-radius: 5px;
+      }
+
+      /* Legend */
+      
+      .legend {
+        padding: 10px 10px;
+        font: 12px "Space Mono", monospace;
+        line-height: 20px;
+        background: white;
+        color: #555;
+        border-radius: 5px;
+      }
+      .legend h4 {
+        margin: 2px 2px 8px;
+        font-family: "Space Mono", monospace;
+        text-align: left;
+        font-size: 14px;
+        font-weight: bolder;
+        color: black;
+      }
+
+      .legend span {
+        position: relative;
+        bottom: 3px;
+      }
+
+      .legend i {
+        width: 18px;
+        height: 18px;
+        margin: 0 8px 0 0;
+        opacity: 0.7;
+        float: left;
+      }
+
+      .legend i.icon {
+        background-size: 18px;
+      }
+    
+    </style>
+
+  </head>
+
+  <body>
+    
+      <div class="w3-display-container w3-info" style="height:5%">
+        <div class="w3-display-left w3-padding">
+          <h1>New York City Department of Parks and Recreation Beach Trip Planner</h1>
+          </div>
+        </div>
+
+        <div class="container-fluid main_wm" style="height: 95%">
+          <div class="row" style="height: 100%">
+              <div class="col-2 mt-3 mb-3 ml-3 mr-3 text-wrap">
+
+                <div class="aboutBox">
+                  <h3 style="color: #FFFFFF;">ABOUT THIS PAGE:</h3>
+                  This Leaflet application provides access to historical water quality averages and real-time weather updates for all accessible 
+                  NYC Department of Parks and Recreation beaches. Utilize the <b>interactive buttons, search bar, or explore the map by hand</b> 
+                  to decide on your next beach trip destination.
+                </div>
+                <br>
+
+                <h3>EXPLORE USING BUTTONS BELOW:</h3>
+                  <button class="button" onclick="map.flyTo([40.58,-73.82], 13.5)">Rockaway Beach (Queens)</button>
+                  <button class="button" onclick="map.flyTo([40.57,-73.9707], 13.5)">Coney Island & Manhattan Beach (Brooklyn)</button>
+                  <button class="button" onclick="map.flyTo([40.575,-74.085], 13.5)">South Beach & Midland Beach (Staten Island)</button>
+                  <button class="button" onclick="map.flyTo([40.865,-73.787], 14)">Orchard Beach (The Bronx)</button>
+                <br>
+
+                <hr class="solid">
+
+                <h3>NOTES:</h3>
+                Please note that beach closures in typically occur due to factors such as water quality concerns or hazardous surf and rip current 
+                conditions posing risks to swimmer safety. Always check <a href="https://www.nyc.gov/site/doh/health/health-topics/beach-homepage.page" target="_blank">
+                official NYC Parks Department alerts</a> for the most up-to-date closure information before heading out!
+
+                <hr class="solid">
+                
+                <h3>DATA SOURCES:</h3>
+                  <a href="https://data.cityofnewyork.us/dataset/Beaches/ijwa-mn2v/about_data" target="_blank">NYC DPR: Beaches</a><br>
+                  <a href="https://data.cityofnewyork.us/Environment/Harbor-Water-Quality/5uug-f49n/about_data" target="_blank">NYC DEP: Harbor Water Quality</a>
+
+              </div>
+              <div class="col-10" style="padding: 0"><div id="map"></div></div>
+            </div>
+        </div>
+
+    <script>
+
+    // <!-- Set Basemaps -->
+
+      var map = L.map("map", {
+        fullscreenControl: true,
+        maxZoom: 15,
+        minZoom: 11,
+      }).setView([40.685, -73.975], 11);
+
+      var basemapNames = [
+          "Esri.WorldGrayCanvas",
+          "CartoDB.Voyager",
+          "CartoDB.DarkMatter",
+        ]; var basemapLayers = Array(basemapNames.length).fill(null);
+
+      basemapNames.forEach((v, i) => {
+        basemapLayers[i] = L.tileLayer.provider(v);
+      });
+
+      basemapLayers[0].addTo(map);
+      
+    // <!-- Color-Coding Features -->
+
+      function statusColor(d){
+        return d = "Active" ? '#0B6FC2' :
+        '#989898' ;
+      }
+
+      function sampleColor(d){
+        return d >= 104 ? '#FF0000' :
+        '#008000' ;
+      }
+
+    // <!-- Events -->
+
+      function onEachFeature(feature, layer) {
+        
+        var popupContentA =
+          "</br> Beach: " +
+          feature.properties.name +
+          "</br> Status: " +
+          feature.properties.featurestatus +
+          "</p>";
+        if (feature.properties && feature.properties.popupContentA) {
+          popupContentA += feature.properties.popupContentA;
+        } layer.bindPopup(popupContentA);
+
+        layer.on({
+          mouseover: function (e) {
+            e.target.setStyle({ fillColor: "#0B6FC2", fillOpacity: 1 });
+          },
+          mouseout: (e) => beachLayer.resetStyle(e.target),
+        }
+      );
+      }
+
+    // <!-- Load Data -->
+
+      var sampleLayer = L.geoJSON(null, {
+          pointToLayer: (f, latLon) => {
+            let cL = L.circle(latLon, {
+              color: sampleColor(f.properties.Enterococci_Results),
+              fillOpacity: 0.5,
+              weight: 0.75,
+              radius: 200
+            });
+          cL.bindPopup("2024 Average Enterococci Levels are " + f.properties.Enterococci_Results + " MPN/100 ml");
+          return cL;
+        },
+        style: function(feature) {
+          return {
+            //f.properties.Enterococci_Results INSIDE of the L.geoJSON brackets! FULL FEATURE outside!
+            color: sampleColor(feature.properties.Enterococci_Results),
+          }
+        }
+      });
+
+      var beachLayer = L.geoJSON(null, 
+        {style: function (feature) {
+            return { color: "#BBD1EA",
+                     fillColor: statusColor(feature.properties.featurestatus),
+                     fillOpacity: 0.25,
+                     weight: .75
+                   };
+            },
+          onEachFeature: onEachFeature, //Name of Option, Value of Option
+      }).addTo(map);
+
+      $.getJSON("./DATA/Beaches.geojson", function (data) {
+        console.log(data);
+        console.log(data.features.length);
+        beachLayer.addData(data);
+      });
+
+      $.getJSON("./DATA/WaterSamples.geojson", function (data) {
+        console.log(data);
+        console.log(data.features.length);
+        sampleLayer.addData(data);
+      });
+
+      sampleLayer.on('click', function(e) {
+        map.flyTo(e.latlng, 15);      
+      }); 
+
+      beachLayer.on('click', function(e) {
+        map.flyTo(e.latlng, 15);
+      }); 
+
+      // <!-- Weather -->
+
+        var tempLayer = L.OWM.temperature({appId: 'f9ed38483e00706d5dd69595de9477e7'});
+        var cloudLayer = L.OWM.cloudsClassic({appId: 'f9ed38483e00706d5dd69595de9477e7'});
+        var precipLayer = L.OWM.precipitationClassic({appId: 'f9ed38483e00706d5dd69595de9477e7'});
+        var windLayer = L.OWM.wind({appId: 'f9ed38483e00706d5dd69595de9477e7'});
+
+        var weatherBar = L.control.weather({
+          apiKey: 'f9ed38483e00706d5dd69595de9477e7',
+          lang: "en",
+          units: "metric"
+        }).addTo(map);
+
+      // <!-- Layer Control -->
+
+      var baseLayers = {};
+      basemapNames.forEach((v, i) => {
+        baseLayers[v] = basemapLayers[i];
+      });
+
+      var overlayMaps = {
+        "NYC Parks Beach Parcels": beachLayer,
+        "Water Quality": sampleLayer,
+        "Temperature": tempLayer,
+        "Cloud Coverage": cloudLayer,
+        "Precipitation": precipLayer,
+        "Wind Conditions": windLayer,
+      };
+
+      var lC = L.control
+        .layers(baseLayers, overlayMaps, {
+          collapsed: false,
+          hideSingleBase: true,
+        }).addTo(map).expand();
+
+      // <!-- Search -->
+
+      var geocoder = L.Control.geocoder({
+        position:"topleft",
+        defaultMarkGeocode: false
+        })
+          .on('markgeocode', function(e) {
+            var bbox = e.geocode.bbox;
+            var poly = L.polygon([
+              bbox.getSouthEast(),
+              bbox.getNorthEast(),
+              bbox.getNorthWest(),
+              bbox.getSouthWest()
+            ]);
+            map.fitBounds(poly.getBounds());
+        }).addTo(map);
+
+      // <!-- Legend -->
+
+        var legend = L.control({position:"bottomleft"});
+
+        legend.onAdd = function(map) {
+          var div = L.DomUtil.create("div", "legend");
+          div.innerHTML += "<h4>Legend</h4>";
+          div.innerHTML += '<i style="background: #0B6FC2"></i><span>Active Beachfront</span><br>';
+          div.innerHTML += '<i style="background: #989898"></i><span>Closed Beachfront</span><br>';
+          div.innerHTML += '<i style="background: #008000"></i><span>Good Water Quality</span><br>';
+          div.innerHTML += '<i style="background: #FF0000"></i><span>Poor Water Quality</span><br>';
+          return div;
+        }; legend.addTo(map);
+
+    </script>
+  </body>
+</html>
